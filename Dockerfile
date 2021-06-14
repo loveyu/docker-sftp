@@ -5,7 +5,10 @@ MAINTAINER Adrian Dvergsdal [atmoz.net]
 # - Install packages
 # - OpenSSH needs /var/run/sshd to run
 # - Remove generic host keys, entrypoint generates unique keys
-RUN apt-get update && \
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
+    && sed -i "s|deb.debian.org/debian|mirrors.tuna.tsinghua.edu.cn/debian|g" /etc/apt/sources.list \
+    && sed -i "s|security.debian.org/debian-security|mirrors.tuna.tsinghua.edu.cn/debian-security|g" /etc/apt/sources.list && \
+    apt-get update && \
     apt-get -y install openssh-server && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir -p /var/run/sshd && \
